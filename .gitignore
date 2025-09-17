@@ -18,6 +18,4 @@
 .vscode/
 
 dist/**/*
-!dist/.keepme
 node_modules/**/*
-tsconfig.tsbuildinfo
