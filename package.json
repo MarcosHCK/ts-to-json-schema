@@ -11,9 +11,16 @@
 
   "devDependencies":
     {
+      "@eslint/js": "^9.35.0",
+      "@types/node": "^24.5.1",
+      "@types/webpack": "^5.28.5",
       "ajv-cli": "^5.0.0",
+      "eslint": "^9.35.0",
+      "globals": "^16.4.0",
+      "jiti": "^2.5.1",
       "ts-json-schema-generator": "^2.4.0",
-      "typescript": "^5.9.2"
+      "typescript": "^5.9.2",
+      "typescript-eslint": "^8.44.0"
     },
 
   "keywords":
@@ -25,15 +32,21 @@
     ],
 
   "license": "SEE LICENSE IN COPYING",
+  "main": "dist/index.js",
   "name": "ts-to-json-schema",
 
   "scripts":
     {
       "build": "tsc",
+      "prepare": "npm run prepare:schema:generate && npm run prepare:schema:compile",
+      "prepare:schema:compile": "npx ajv compile -s src/common/TsSchema.json -o src/common/TsSchema.ajv.cjs",
+      "prepare:schema:generate": "ts-json-schema-generator -p src/common/TsSchema.ts -t TsSchema -o src/common/TsSchema.json",
       "dev": "tsc --watch",
       "lint": "eslint src --ext .ts",
-      "prepublishOnly": "npm run build",
+      "prepublishOnly": "npm run build"
     },
 
+  "types": "dist/index.d.ts",
   "version": "0.0.1"
 }
+

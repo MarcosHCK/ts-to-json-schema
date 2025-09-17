@@ -15,9 +15,5 @@
 # along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
 #
 
-.vscode/
-
-dist/**/*
-!dist/.keepme
-node_modules/**/*
-tsconfig.tsbuildinfo
+TsSchema.json
+TsSchema.ajv.cjs
