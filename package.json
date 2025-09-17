@@ -1,0 +1,39 @@
+{
+
+  "author": "MarcosHCK <marcoshck16@gmail.com>",
+
+  "dependencies":
+    {
+      "ajv": "^8.17.1"
+    },
+
+  "description": "Convert Typescript types to JSON schemas/validators automatically",
+
+  "devDependencies":
+    {
+      "ajv-cli": "^5.0.0",
+      "ts-json-schema-generator": "^2.4.0",
+      "typescript": "^5.9.2"
+    },
+
+  "keywords":
+    [
+      "cli",
+      "plugin",
+      "typescript",
+      "webpack"
+    ],
+
+  "license": "SEE LICENSE IN COPYING",
+  "name": "ts-to-json-schema",
+
+  "scripts":
+    {
+      "build": "tsc",
+      "dev": "tsc --watch",
+      "lint": "eslint src --ext .ts",
+      "prepublishOnly": "npm run build",
+    },
+
+  "version": "0.0.1"
+}
