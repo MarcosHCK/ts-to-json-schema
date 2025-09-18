@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
  */
-import validator from '@common/TsSchema.ajv.cjs'
 import { close, explore, normalizeFile } from '@common/filesystem'
 import { createReadStream } from 'fs'
 import { dirname } from 'path'
+import { getValidator } from '@common/TsSchema.shim'
 import { json as _json } from 'stream/consumers'
 import { type DefinedError } from 'ajv'
 import { type Schema, type TsSchema } from '@common/TsSchema'
+const validator = getValidator ()
 
 export async function* collect (path: string, { compile }: { compile: boolean })
   : AsyncGenerator<Schema, void, unknown>

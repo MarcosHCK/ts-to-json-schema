@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
  */
-import { type Configuration } from 'webpack'
 import { dependencies, devDependencies } from './package.json'
+import { type Configuration } from 'webpack'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import path from 'path'
 
 const config: Configuration =
@@ -23,7 +24,7 @@ const config: Configuration =
 
   devtool: 'source-map',
 
-  entry: [ './src/plugin/Ts2JsonSchemaPlugin.ts' ],
+  entry: [ './src/index.ts' ],
 
   externals:
     [
@@ -61,6 +62,24 @@ const config: Configuration =
       libraryTarget: 'umd',
       path: path.resolve (__dirname, 'dist'),
     },
+
+  plugins:
+    [
+
+      new ForkTsCheckerWebpackPlugin (
+        {
+
+          typescript:
+            {
+              diagnosticOptions:
+                {
+                  semantic: true,
+                  syntactic: true,
+                },
+              mode: 'write-references',
+            },
+        })
+    ]
 }
 
 export default config

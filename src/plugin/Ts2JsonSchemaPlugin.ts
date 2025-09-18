@@ -31,7 +31,7 @@ export interface Options
   generatorOptions?: GenerateOptions;
 }
 
-export default class Ts2JsonSchemaPlugin
+export class Ts2JsonSchemaPlugin
 {
 
   private basePath: string
@@ -112,3 +112,5 @@ export default class Ts2JsonSchemaPlugin
         compilation.fileDependencies.add (file)
     }
 }
+
+export default Ts2JsonSchemaPlugin
