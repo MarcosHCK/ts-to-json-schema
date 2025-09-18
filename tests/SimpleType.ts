@@ -15,20 +15,15 @@
  * along with uh-statistics. If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports =
+export interface SimpleType
 {
-  presets:
-    [
-      [ '@babel/preset-env', { targets: 'defaults' }],
-      '@babel/preset-typescript'
-    ],
-  plugins:
-    [
-      [ 'module-resolver', { 'root': './src/',
-                             alias: { '@cli': './src/cli/',
-                                      '@common': './src/common/',
-                                      '@package': './package.json',
-                                      '@plugin': './src/plugin/' }}
-      ]
-    ],
+
+  variable1: string;
+  variable2: string | string[];
+  variable3?: string | string[];
+  variable4: boolean | number;
+  variable5?: boolean | number;
+  variable6: { subVar1: number };
+  variable7: { subVar2: number } & { subVar3: boolean };
+  variable8: { subVar2: number } | { subVar2: boolean };
 }

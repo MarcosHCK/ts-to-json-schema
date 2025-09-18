@@ -15,11 +15,11 @@
  * along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
  */
 import { BaseError } from 'ts-json-schema-generator'
-import { collect, collectConf } from '@common/config'
+import { collect } from '@common/config'
 import { compile, type CompilerOptions } from '@common/compiler'
 import { generate, type GenerateOptions } from '@common/generator'
 import { relative } from 'path'
-import { type Compilation, type Compiler } from 'webpack'
+import { type Compiler } from 'webpack'
 import { type Schema } from '@common/TsSchema'
 import { writeFile } from '@common/filesystem'
 
@@ -54,13 +54,6 @@ export class Ts2JsonSchemaPlugin
         {
           return this.generate ()
         })
-
-      if (compiler.options.watch)
-
-      compiler.hooks.afterCompile.tapPromise ('SchemaGeneratorPlugin', compilation =>
-        {
-          return this.watchFiles (compilation)
-        })
     }
 
   public async generate ()
@@ -77,7 +70,10 @@ export class Ts2JsonSchemaPlugin
   public async* generateAll ()
     {
 
-      for await (const entry of collect (this.basePath, { compile: this.compileSchemas }))
+      const options = { compile: this.compileSchemas,
+                            esm: this.compilerOptions.code.esm }
+
+      for await (const entry of collect (this.basePath, options))
         yield this.generateOne (entry)
     }
 
@@ -88,7 +84,7 @@ export class Ts2JsonSchemaPlugin
       const { file, output, type } = schema
 
       const where = relative (process.cwd (), file)
-      console.log (`Generating schema for '${type}' (in ${where})`, file)
+      console.log (`Generating schema for '${type}' (in ${where})`)
 
       let result
       if ((result = await generate (schema, this.generatorOptions)) instanceof BaseError)
@@ -98,18 +94,6 @@ export class Ts2JsonSchemaPlugin
         { result = mayCompile ? compile (result, this.compilerOptions) : JSON.stringify (result, null, 2) }
 
       await writeFile (output, result, { encoding: 'utf8' })
-    }
-
-  public async watchFiles (compilation: Compilation)
-    {
-
-      for await (const conf of collectConf (this.basePath))
-
-        compilation.fileDependencies.add (conf)
-
-      for await (const { file } of collect (this.basePath, { compile: false }))
-
-        compilation.fileDependencies.add (file)
     }
 }
 

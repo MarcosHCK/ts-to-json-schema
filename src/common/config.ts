@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
  */
-import { close, explore, normalizeFile } from '@common/filesystem'
+import { explore, normalizeFile } from '@common/filesystem'
 import { createReadStream } from 'fs'
 import { dirname } from 'path'
 import { getValidator } from '@common/TsSchema.shim'
@@ -23,7 +23,7 @@ import { type DefinedError } from 'ajv'
 import { type Schema, type TsSchema } from '@common/TsSchema'
 const validator = getValidator ()
 
-export async function* collect (path: string, { compile }: { compile: boolean })
+export async function* collect (path: string, { compile, esm }: { compile: boolean, esm?: boolean })
   : AsyncGenerator<Schema, void, unknown>
 {
 
@@ -60,7 +60,7 @@ export async function* collect (path: string, { compile }: { compile: boolean })
         {
 
           const base = dirname (name)
-          const ext = ! (desc.compile ?? compile) ? 'json' : 'ajv.cjs'
+          const ext = ! (desc.compile ?? compile) ? 'json' : `ajv.${! esm ? 'cjs' : 'mjs'}`
 
           const file = normalizeFile (desc.file, base, `${type}.ts`)
           const output = normalizeFile (desc.output, base, `${type}.${ext}`)
@@ -73,5 +73,5 @@ export async function* collectConf (path: string)
 {
 
   for await (const [ fd, name ] of explore (path))
-    { await close (fd); yield name }
+    { await fd.close (); yield name;  }
 }

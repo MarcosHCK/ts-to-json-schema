@@ -16,20 +16,17 @@
  */
 import { dependencies, devDependencies } from './package.json'
 import { type Configuration } from 'webpack'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import path from 'path'
 
-const config: Configuration =
+const base: Configuration =
 {
 
   devtool: 'source-map',
 
-  entry: [ './src/index.ts' ],
-
   externals:
     [
       ...Object.keys (dependencies),
-      ...Object.keys (devDependencies),
+      ...Object.keys (devDependencies).filter (e => e !== 'commander'),
       'fs', 'path'
     ],
 
@@ -53,33 +50,36 @@ const config: Configuration =
     },
 
   target: 'node',
+}
+
+const allConfig: Configuration =
+{
+  ...base,
+
+  entry: [ './src/index.ts' ],
 
   output:
     {
       clean: true,
       filename: 'index.js',
-      library: '[name]',
-      libraryTarget: 'umd',
+      library: { type: 'umd' },
       path: path.resolve (__dirname, 'dist'),
     },
-
-  plugins:
-    [
-
-      new ForkTsCheckerWebpackPlugin (
-        {
-
-          typescript:
-            {
-              diagnosticOptions:
-                {
-                  semantic: true,
-                  syntactic: true,
-                },
-              mode: 'write-references',
-            },
-        })
-    ]
 }
 
-export default config
+const cliConfig: Configuration =
+{
+  ...base,
+
+  entry: [ './src/cli/index.ts' ],
+
+  output:
+    {
+      clean: true,
+      filename: 'index.js',
+      library: { type: 'umd' },
+      path: path.resolve (__dirname, 'dist/cli'),
+    },
+}
+
+export default [ allConfig, cliConfig ]

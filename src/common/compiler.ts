@@ -17,7 +17,7 @@
 import { Ajv, Options as AjvOptions, type SchemaObject } from 'ajv'
 import standAlone from 'ajv/dist/standalone'
 
-export type CompilerOptionsCode = Omit<AjvOptions['code'], 'source'>
+export type CompilerOptionsCode = Omit<Required<AjvOptions>['code'], 'source'>
 export type CompilerOptions = Omit<AjvOptions, 'code'> & { code: CompilerOptionsCode }
 
 export function compile (schema: SchemaObject, options: CompilerOptions)

@@ -10,11 +10,13 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "paths": {
-      "@common/*": ["./src/common/*"],
-      "@cli/*": ["./src/cli/*"],
-      "@plugin/*": ["./src/plugin/*"],
+      "@common/*": [ "./src/common/*" ],
+      "@cli/*": [ "./src/cli/*" ],
+      "@package": [ "./package.json" ],
+      "@plugin/*": [ "./src/plugin/*" ]
     },
     "forceConsistentCasingInFileNames": true
   },

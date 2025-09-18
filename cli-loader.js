@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 /* Copyright (C) 2025 MarcosHCK
  * This file is part of uh-statistics.
  *
@@ -15,20 +16,4 @@
  * along with uh-statistics. If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports =
-{
-  presets:
-    [
-      [ '@babel/preset-env', { targets: 'defaults' }],
-      '@babel/preset-typescript'
-    ],
-  plugins:
-    [
-      [ 'module-resolver', { 'root': './src/',
-                             alias: { '@cli': './src/cli/',
-                                      '@common': './src/common/',
-                                      '@package': './package.json',
-                                      '@plugin': './src/plugin/' }}
-      ]
-    ],
-}
+require ('./dist/cli/index')

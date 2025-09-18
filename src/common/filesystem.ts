@@ -14,26 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with ts-to-json-schema. If not, see <https://www.gnu.org/licenses/>.
  */
-import { close as _close, open as _open, opendir as _opendir, writeFile as _writeFile } from 'fs'
+export { opendir, writeFile } from 'fs/promises'
 import { join, resolve } from 'path'
-import type { Dir, PathLike, PathOrFileDescriptor, WriteFileOptions } from 'fs'
+import { open as _open, opendir, type FileHandle } from 'fs/promises'
+import type { Dir, PathLike } from 'fs'
 
-export async function close (fd: number)
+export async function* explore (path: string): AsyncGenerator<[ FileHandle, string ], void, unknown>
 {
 
-  return new Promise<void> ((resolve, reject) =>
-
-    _close (fd, err =>
-      {
-        if (err != null) reject (err)
-                    else resolve ()
-      }))
-}
-
-export async function* explore (path: string): AsyncGenerator<[ number, string ], void, unknown>
-{
-
-  const dir = await opendirAsync (path)
+  const dir = await opendir (path)
   const conf = join (path, 'tsschema.json')
 
   let fd
@@ -57,37 +46,18 @@ export function normalizeFile (file: string | undefined, base: string, alt: stri
 export async function open (path: PathLike)
 {
 
-  return new Promise<null | number> ((resolve, reject) =>
-
-    _open (path, (err, fd) =>
-      {
-
-        if (err == null) resolve (fd)
-        else
-        if (err.code === 'ENOENT') resolve (null)
-        else
-                                   reject (err)
-      }))
-}
-
-export async function opendirAsync (path: PathLike)
-{
-
-  return new Promise<Dir> ((resolve, reject) =>
-
-    _opendir (path, (err, dir) =>
-      {
-        if (err != null) reject (err)
-                    else resolve (dir)
-      }))
-}
-
-export function writeFile (file: PathOrFileDescriptor, data: string, options: WriteFileOptions)
-{
-
-  return new Promise<void> ((resolve, reject) => _writeFile (file, data, options, err =>
+  try { return await _open (path) } catch (e)
     {
-      if (err !== null) reject (err)
-      if (err === null) resolve ()
-    }))
+
+      if (typeof e !== 'object' || e == null)
+
+        throw e
+      else
+
+        if (! Object.hasOwn (e, 'code') || (e as { code: string }).code !== 'ENOENT')
+
+          throw e
+        else
+          return null
+    }
 }

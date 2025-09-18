@@ -2,6 +2,11 @@
 
   "author": "MarcosHCK <marcoshck16@gmail.com>",
 
+  "bin":
+    {
+      "ts-to-json-schema": "./cli-loader.js"
+    },
+
   "dependencies":
     {
       "ajv": "^8.17.1",
@@ -40,6 +45,7 @@
     [
       "AUTHORS",
       "COPYING",
+      "cli-loader.js",
       "dist/"
     ],
 
@@ -59,7 +65,9 @@
     {
       "build": "npm run build:bundle && npm run build:types",
       "build:bundle": "webpack --config webpack.config.ts",
-      "build:types": "dts-bundle-generator -o dist/index.d.ts src/index.ts",
+      "build:types": "npm run build:types:cli && npm run build:types:plugin",
+      "build:types:cli": "dts-bundle-generator -o dist/cli/index.d.ts src/cli/index.ts",
+      "build:types:plugin": "dts-bundle-generator -o dist/index.d.ts src/index.ts",
       "dev": "webpack --config webpack.config.ts --watch",
       "lint": "eslint src --ext .ts",
       "prepare": "npm run prepare:schema:generate && npm run prepare:schema:compile",
